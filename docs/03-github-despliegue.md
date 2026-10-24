@@ -58,6 +58,10 @@ Thumbs.db
 
 > Si quieres conservar datos de demostración, versiona `db.example.json` y documenta que el
 > servidor crea `db.json` vacío en el primer arranque.
+>
+> **Nota sobre el historial:** si `db.json` ya estaba versionado en un commit anterior, seguirá
+> existiendo en el historial aunque se elimine del árbol actual. Si contiene datos reales,
+> reescribe el historial con `git filter-repo` o crea un repositorio nuevo antes de publicar.
 
 ---
 
