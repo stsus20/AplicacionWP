@@ -1,0 +1,156 @@
+{
+  "generatedAt": "2026-10-24T14:44:02.342Z",
+  "environment": {
+    "browser": "Microsoft Edge headless (CDP)",
+    "viewport": "390x844 (móvil) / 1280x800 (escritorio)",
+    "url": "http://127.0.0.1:3100",
+    "node": "v26.5.1"
+  },
+  "cases": [
+    {
+      "id": "CP-01",
+      "name": "Carga inicial, Service Worker y caché offline",
+      "expected": "La app carga, el SW queda activo y el precache contiene los recursos del shell.",
+      "obtained": "Total 3; SW: Activo · activated; caché: 24 recursos · 1 caché(s); almacenamiento: IndexedDB; controlador: true.",
+      "status": "Aprobado",
+      "evidence": [
+        "docs/evidencias/01-home-online.png"
+      ]
+    },
+    {
+      "id": "CP-02",
+      "name": "Manifest e instalabilidad",
+      "expected": "manifest.json válido, con iconos 192/512 y sin errores críticos de instalación.",
+      "obtained": "Manifest: Alerta Campus — Registro de Incidencias; iconos: 4; errores: [].",
+      "status": "Aprobado",
+      "evidence": []
+    },
+    {
+      "id": "CP-03",
+      "name": "Permiso y notificación local de prueba",
+      "expected": "El permiso está concedido y showNotification deja una notificación consultable.",
+      "obtained": "Notificaciones obtenidas: [{\"title\":\"Alerta Campus\",\"body\":\"Las notificaciones locales funcionan. Toca para abrir el historial.\",\"tag\":\"alerta-campus-prueba\"}].",
+      "status": "Aprobado",
+      "evidence": [
+        "docs/evidencias/02-diagnostico-pwa.png",
+        "docs/evidencias/03-notificacion.png"
+      ]
+    },
+    {
+      "id": "CP-04",
+      "name": "Geolocalización: permiso concedido y captura",
+      "expected": "Se obtienen coordenadas y precisión sin bloquear el formulario.",
+      "obtained": "Coordenadas mostradas: 19.43260, -99.13320 · ±25 m.",
+      "status": "Aprobado",
+      "evidence": [
+        "docs/evidencias/04-geolocalizacion.png"
+      ]
+    },
+    {
+      "id": "CP-05",
+      "name": "Alta de incidencia con ubicación y sincronización",
+      "expected": "La incidencia se guarda, muestra enlace al mapa y llega al servidor con lat/lng.",
+      "obtained": "Tarjeta: Fuga de agua en el laboratorio 3 Enviada El agua se acerca a las tomas de corriente. Alta 24 oct 2026, 08:44 a.m.19.4326; mapa: sí; servidor: 19.4326, -99.1332.",
+      "status": "Aprobado",
+      "evidence": [
+        "docs/evidencias/05-historial-geo.png"
+      ]
+    },
+    {
+      "id": "CP-06",
+      "name": "Disparador: incidencia de prioridad Alta",
+      "expected": "Al guardar una incidencia Alta con permiso concedido se emite una notificación.",
+      "obtained": "Notificaciones: [{\"title\":\"Alerta Campus\",\"body\":\"Las notificaciones locales funcionan. Toca para abrir el historial.\",\"tag\":\"alerta-campus-prueba\"},{\"title\":\"Incidencia de prioridad Alta\",\"body\":\"Fuga de agua en el laboratorio 3 · El agua se acerca a las tomas de corriente.\",\"tag\":\"incidencia-e6071269-3904-4aef-99a4-1e7cb9c41024\"}].",
+      "status": "Aprobado",
+      "evidence": []
+    },
+    {
+      "id": "CP-07",
+      "name": "Geolocalización: permiso denegado",
+      "expected": "Se muestra un mensaje claro y la incidencia puede guardarse sin ubicación.",
+      "obtained": "Mensaje: Permiso de ubicación denegado. Habilítalo en los ajustes del navegador o del sistema.",
+      "status": "Aprobado",
+      "evidence": [
+        "docs/evidencias/06-geo-denegado.png"
+      ]
+    },
+    {
+      "id": "CP-08",
+      "name": "Funcionamiento offline con recarga",
+      "expected": "La app recarga sin red, conserva los datos y muestra el estado Sin conexión.",
+      "obtained": "Estado: Sin conexión; total: 4; controlador: true; caché: 34 recursos · 2 caché(s).",
+      "status": "Aprobado",
+      "evidence": [
+        "docs/evidencias/07-offline.png"
+      ]
+    },
+    {
+      "id": "CP-09",
+      "name": "Alta de incidencia sin conexión",
+      "expected": "La incidencia se guarda en IndexedDB y queda marcada como pendiente.",
+      "obtained": "Pendientes: 1; badge: Pendiente; contador: 1.",
+      "status": "Aprobado",
+      "evidence": [
+        "docs/evidencias/08-pendiente-offline.png"
+      ]
+    },
+    {
+      "id": "CP-10",
+      "name": "Reconexión y sincronización automática",
+      "expected": "Al volver la red, la cola pendiente se envía y el contador queda en cero.",
+      "obtained": "Servidor: incidencia presente; pendientes: 0.",
+      "status": "Aprobado",
+      "evidence": [
+        "docs/evidencias/09-sincronizado.png"
+      ]
+    },
+    {
+      "id": "CP-11",
+      "name": "Idempotencia ante reintentos",
+      "expected": "Dos POST con el mismo id no duplican el registro.",
+      "obtained": "Respuestas: 201/200; copias en servidor: 1.",
+      "status": "Aprobado",
+      "evidence": []
+    },
+    {
+      "id": "CP-12",
+      "name": "Persistencia local tras recarga",
+      "expected": "IndexedDB conserva las incidencias al recargar.",
+      "obtained": "Total tras recarga: 6.",
+      "status": "Aprobado",
+      "evidence": []
+    },
+    {
+      "id": "CP-13",
+      "name": "Eliminación de incidencia",
+      "expected": "La incidencia se elimina localmente y del servidor tras sincronizar.",
+      "obtained": "Eliminada en servidor: true.",
+      "status": "Aprobado",
+      "evidence": []
+    },
+    {
+      "id": "CP-14",
+      "name": "Diseño responsive de escritorio",
+      "expected": "La app se centra a 600px y la navegación permanece fija.",
+      "obtained": "Ancho del contenedor: 600px; navegación: fixed.",
+      "status": "Aprobado",
+      "evidence": [
+        "docs/evidencias/10-escritorio.png"
+      ]
+    },
+    {
+      "id": "CP-15",
+      "name": "Consola del navegador",
+      "expected": "Sin excepciones de JavaScript durante el recorrido completo.",
+      "obtained": "Sin excepciones.",
+      "status": "Aprobado",
+      "evidence": []
+    }
+  ],
+  "summary": {
+    "total": 15,
+    "passed": 15,
+    "failed": 0,
+    "logs": []
+  }
+}
