@@ -1,0 +1,33 @@
+[
+  {
+    "id": "demo-luminaria",
+    "titulo": "Luminaria fundida en el pasillo B",
+    "prioridad": "Media",
+    "descripcion": "El pasillo queda a oscuras después de las 18:00.",
+    "fecha": "2026-10-24T12:00:00.000Z",
+    "updated": "2026-10-24T12:00:00.000Z",
+    "synced": true
+  },
+  {
+    "id": "demo-fuga",
+    "titulo": "Fuga de agua en el baño de profesores",
+    "prioridad": "Alta",
+    "descripcion": "Hay agua acumulada junto a la puerta.",
+    "fecha": "2026-10-24T12:15:00.000Z",
+    "updated": "2026-10-24T12:15:00.000Z",
+    "synced": true,
+    "lat": 19.4326,
+    "lng": -99.1332,
+    "accuracy": 18,
+    "geoAt": "2026-10-24T12:15:00.000Z"
+  },
+  {
+    "id": "demo-basura",
+    "titulo": "Contenedor de basura lleno",
+    "prioridad": "Baja",
+    "descripcion": "Frente al edificio de vinculación.",
+    "fecha": "2026-10-24T12:30:00.000Z",
+    "updated": "2026-10-24T12:30:00.000Z",
+    "synced": true
+  }
+]
