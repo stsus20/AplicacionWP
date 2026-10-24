@@ -3,144 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Alerta Campus: reporta incidencias aunque no tengas internet. Guarda, sincroniza, adjunta ubicación y recibe notificaciones.">
 <meta name="theme-color" content="#2A1F6B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Alerta Campus">
+<meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon.svg">
-<title>Alerta Campus - Incidencias</title>
-<style>
-:root{
-  --ink:#1B1740; --ind:#2A1F6B; --vio:#6C4DFF; --mint:#2DD4A7; --sun:#FFC53D; --rose:#FF5C7A;
-  --paper:#F4F2FB; --card:#FFFFFF; --line:#E3DFF3; --mute:#6F6A92; --ink2:#4B4672;
-  --shadow-sm:4px 4px 0 var(--ink);
-}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;overflow-x:hidden;font-family:"Inter","Segoe UI",system-ui,sans-serif;background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased}
-button,input,textarea{font:inherit;color:inherit}
-:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
-h1,h2,h3{font-family:"Archivo Black","Arial Black",sans-serif;margin:0;letter-spacing:-.02em}
-.i{width:1.25em;height:1.25em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.25em;flex:none}
-
-/* Splash */
-#splash{position:fixed;inset:0;z-index:20;background:radial-gradient(circle at 30% 20%,#6C4DFF 0,#2A1F6B 55%,#150F3D 100%);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .5s,transform .5s}
-#splash.hide{opacity:0;transform:scale(1.04);pointer-events:none}
-#splash .mark{width:96px;height:96px}
-#splash .tri{stroke-dasharray:420;stroke-dashoffset:420;animation:draw 1.1s .1s forwards ease-out}
-#splash .bar1,#splash .dot{opacity:0;animation:pop .4s 1s forwards}
-@keyframes draw{to{stroke-dashoffset:0}}@keyframes pop{to{opacity:1}}
-#splash h1{font-size:32px}
-#splash p{margin:0;color:#C9C0FF;font-size:12px;letter-spacing:.18em;text-transform:uppercase}
-.load{width:150px;height:4px;border-radius:4px;background:#ffffff30;overflow:hidden}
-.load i{display:block;height:100%;width:0;background:var(--sun);animation:ld 1.4s forwards}
-@keyframes ld{to{width:100%}}
-@media(prefers-reduced-motion:reduce){#splash *{animation-duration:.01s!important}}
-
-/* Estructura */
-.app{max-width:600px;margin:auto;min-height:100vh;padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
-.hero{background:linear-gradient(160deg,#6C4DFF,#2A1F6B 70%);color:#fff;padding:calc(18px + env(safe-area-inset-top,0px)) 22px 34px;border-radius:0 0 32px 32px;position:relative;overflow:hidden}
-.hero::after{content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;border:2px dashed #ffffff30;border-radius:50%}
-.bar{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
-.brand{display:flex;gap:10px;align-items:center;font-family:"Archivo Black","Arial Black",sans-serif;font-size:15px}
-.brand .lg{width:34px;height:34px;border-radius:10px;background:var(--sun);color:var(--ink);display:grid;place-items:center}
-#st{display:flex;gap:6px;align-items:center;font-size:11px;font-weight:700;padding:7px 12px;border-radius:20px;background:#2DD4A733;color:#9BF5DD;letter-spacing:.04em;text-transform:uppercase}
-#st.off{background:#FF5C7A33;color:#FFC2CD}
-.hero h2{font-size:36px;line-height:1;margin-top:28px;position:relative;z-index:1}
-.hero p{margin:10px 0 0;color:#D6CFFF;font-size:14px;max-width:34ch;position:relative;z-index:1}
-.view{display:none;padding:0 18px;clear:both}
-.view.on{display:block;animation:in .25s ease-out}
-@keyframes in{from{opacity:0;transform:translateY(6px)}}
-.pull{margin-top:20px}
-.card{position:relative;background:var(--card);border:2px solid var(--ink);border-radius:20px;padding:20px;margin-bottom:16px;box-shadow:var(--shadow-sm)}
-.card h3{font-size:14px;margin-bottom:16px;display:flex;gap:8px;align-items:center;text-transform:uppercase;letter-spacing:.08em}
-
-/* Créditos */
-.cr{margin:0 0 12px;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--vio);display:flex;gap:12px;align-items:center}
-.cr img{width:70px;height:70px;border-radius:50%;object-fit:cover;border:2px solid var(--ink);background:#fff;flex:none}
-.hero .cr img,nav .cr img{border-color:#fff}
-.hero .cr{color:#C9C0FF;margin:14px 0 0;font-size:12px;max-width:none}
-nav .cr{grid-column:1/-1;justify-content:center;color:#B7ADFF;margin:0;padding:4px 0 8px}
-nav .cr img{width:50px;height:50px}
-.app{padding-bottom:calc(170px + env(safe-area-inset-bottom,0px))}
-
-/* Resumen */
-.sum{display:flex;gap:20px;align-items:center}
-.donut{width:112px;height:112px;flex:none;position:relative}
-.donut svg{transform:rotate(-90deg);display:block}
-.donut .c{position:absolute;inset:0;display:grid;place-items:center;text-align:center;line-height:1}
-.donut b{font-size:30px;font-family:"Archivo Black","Arial Black",sans-serif}
-.donut small{font-size:10px;color:var(--mute);text-transform:uppercase;letter-spacing:.1em;font-weight:700}
-.legend{display:grid;gap:10px;font-size:14px;flex:1;min-width:0}
-.legend div{display:flex;align-items:center;gap:10px;font-weight:600}
-.legend i{width:14px;height:14px;border-radius:4px;display:block;border:2px solid var(--ink)}
-.legend b{font-family:"Archivo Black","Arial Black",sans-serif;font-size:16px}
-.pr{display:grid;grid-template-columns:70px 1fr 30px;gap:12px;align-items:center;font-size:13px;font-weight:700;margin:12px 0}
-.pr>span{text-transform:uppercase;letter-spacing:.06em;font-size:12px}
-.pr>b{text-align:right;font-family:"Archivo Black","Arial Black",sans-serif}
-.track{height:14px;background:var(--paper);border:2px solid var(--ink);border-radius:8px;overflow:hidden}
-.track i{display:block;height:100%;width:0;transition:width .6s cubic-bezier(.22,1,.36,1)}
-.btn{display:flex;gap:10px;align-items:center;justify-content:center;width:100%;padding:16px;border:2px solid var(--ink);border-radius:14px;background:var(--vio);color:#fff;font-weight:800;font-size:14px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform .1s,box-shadow .1s}
-.btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
-.btn:disabled{opacity:.45;box-shadow:var(--shadow-sm);cursor:not-allowed;transform:none}
-.spin .i{animation:r 1s linear infinite}
-@keyframes r{to{transform:rotate(360deg)}}
-
-/* Formulario */
-label.l{display:block;font-size:12px;font-weight:800;margin:18px 0 8px;text-transform:uppercase;letter-spacing:.08em}
-.in{width:100%;padding:14px 16px;border:2px solid var(--ink);border-radius:14px;background:#fff;font-size:15px;transition:box-shadow .15s}
-.in:focus{outline:0;box-shadow:var(--shadow-sm)}
-.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.seg input{position:absolute;opacity:0;pointer-events:none}
-.seg label{display:flex;flex-direction:column;gap:6px;align-items:center;padding:14px 6px;border:2px solid var(--ink);border-radius:14px;font-size:12px;font-weight:800;cursor:pointer;background:#fff;text-transform:uppercase;letter-spacing:.06em;transition:transform .1s,box-shadow .1s,background .15s}
-.seg label .i{width:1.7em;height:1.7em}
-.seg input:checked+label{box-shadow:var(--shadow-sm);transform:translate(-2px,-2px)}
-.seg input[value=Baja]:checked+label{background:var(--mint)}
-.seg input[value=Media]:checked+label{background:var(--sun)}
-.seg input[value=Alta]:checked+label{background:var(--rose);color:#fff}
-.seg input:focus-visible+label{outline:3px solid var(--vio);outline-offset:2px}
-
-/* Historial */
-.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 14px;scrollbar-width:none}
-.chips::-webkit-scrollbar{display:none}
-.chip{flex:none;padding:9px 14px;border-radius:20px;border:2px solid var(--ink);background:#fff;font-weight:800;font-size:12px;white-space:nowrap;cursor:pointer;display:flex;gap:6px;align-items:center;text-transform:uppercase;letter-spacing:.05em}
-.chip.on{background:var(--ind);color:#fff}
-.tk{background:#fff;border:2px solid var(--ink);border-radius:18px;padding:16px 16px 16px 22px;margin-bottom:12px;position:relative;overflow:hidden;box-shadow:var(--shadow-sm)}
-.tk::before{content:"";position:absolute;left:0;top:0;bottom:0;width:8px;background:var(--c);border-right:2px solid var(--ink)}
-.tk .h{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
-.tk b{font-size:16px;overflow-wrap:anywhere;line-height:1.25}
-.tk p{margin:8px 0 0;color:var(--ink2);font-size:14px;overflow-wrap:anywhere;line-height:1.45}
-.badge{display:inline-flex;gap:5px;align-items:center;font-size:10px;font-weight:800;padding:5px 10px;border-radius:10px;white-space:nowrap;border:2px solid var(--ink);text-transform:uppercase;letter-spacing:.06em}
-.badge.ok{background:var(--mint)}.badge.wait{background:var(--sun)}
-.meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--mute);font-weight:600}
-.meta span{display:inline-flex;gap:5px;align-items:center}
-.empty{text-align:center;color:var(--mute);padding:36px 14px;border:2px dashed var(--line);border-radius:20px;font-weight:600}
-.empty .i{width:40px;height:40px;display:block;margin:0 auto 10px}
-
-/* CRUD */
-.sb{position:relative;margin-bottom:12px}
-.sb .i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--mute)}
-.sb .in{padding-left:42px}
-.acts{display:flex;gap:10px;margin-top:14px}
-.mini{display:inline-flex;gap:6px;align-items:center;padding:8px 12px;border:2px solid var(--ink);border-radius:10px;background:#fff;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
-.mini:active{transform:translate(2px,2px);box-shadow:none}
-.mini.del{background:var(--rose);color:#fff}
-.btn.ghost{background:#fff;color:var(--ink)}
-.btn.dng{background:var(--rose);color:#fff}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.ov{position:fixed;inset:0;background:#1B1740aa;display:none;align-items:center;justify-content:center;padding:20px;z-index:30}
-.ov.on{display:flex}
-.box{background:#fff;border:2px solid var(--ink);border-radius:20px;padding:22px;max-width:380px;width:100%;box-shadow:6px 6px 0 var(--ink)}
-.box h3{font-size:18px;margin-bottom:8px}.box p{margin:0 0 18px;color:var(--ink2);overflow-wrap:anywhere}
-.editing{display:none;margin:0 0 14px;padding:10px 12px;border:2px dashed var(--vio);border-radius:12px;font-size:13px;font-weight:700;color:var(--vio)}
-.editing.on{display:flex;gap:8px;align-items:center}
-
-/* Navegación */
-nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;padding:0 16px calc(14px + env(safe-area-inset-bottom,0px));pointer-events:none}
-nav .in2{pointer-events:auto;width:100%;max-width:540px;background:var(--ind);border:2px solid var(--ink);border-radius:20px;display:grid;grid-template-columns:repeat(3,1fr);padding:6px;box-shadow:0 12px 30px -10px #150F3Dcc}
-nav button{border:0;background:none;color:#B7ADFF;display:flex;flex-direction:column;gap:3px;align-items:center;padding:10px 0;border-radius:14px;font-size:11px;font-weight:800;cursor:pointer;position:relative;text-transform:uppercase;letter-spacing:.06em}
-nav button.on{background:var(--vio);color:#fff}
-nav .dot{position:absolute;top:5px;right:calc(50% - 24px);min-width:18px;height:18px;border-radius:9px;background:var(--sun);color:var(--ink);font-size:10px;display:none;place-items:center;padding:0 5px;border:2px solid var(--ind)}
-#toast{position:fixed;left:50%;bottom:calc(130px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:14px 20px;border-radius:14px;font-weight:700;font-size:13px;opacity:0;transition:.25s;pointer-events:none;display:flex;gap:8px;align-items:center;z-index:10;border:2px solid var(--sun);max-width:calc(100vw - 32px)}
-#toast.on{opacity:1;transform:translate(-50%,0)}
-</style>
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="css/styles.css">
+<title>Alerta Campus · Incidencias</title>
 </head>
 <body>
 
@@ -164,7 +38,18 @@ nav .dot{position:absolute;top:5px;right:calc(50% - 24px);min-width:18px;height:
 <symbol id="ic-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
 <symbol id="ic-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></symbol>
 <symbol id="ic-pulse" viewBox="0 0 24 24"><path d="M3 12h4l3-7 4 14 3-7h4"/></symbol>
+<symbol id="ic-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+<symbol id="ic-bell" viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
+<symbol id="ic-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+<symbol id="ic-install" viewBox="0 0 24 24"><path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M4 19h16"/></symbol>
+<symbol id="ic-map" viewBox="0 0 24 24"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/></symbol>
 </svg>
+
+<div id="updatebar" role="status" aria-live="polite">
+  <span>Hay una nueva versión de Alerta Campus disponible.</span>
+  <button id="updatebtn" type="button">Actualizar</button>
+  <button id="updatedismiss" class="ghost" type="button" aria-label="Cerrar aviso">✕</button>
+</div>
 
 <div id="splash">
   <svg class="mark" viewBox="0 0 120 120" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -179,7 +64,7 @@ nav .dot{position:absolute;top:5px;right:calc(50% - 24px);min-width:18px;height:
   <div class="hero">
     <div class="bar">
       <div class="brand"><span class="lg"><svg class="i"><use href="#ic-alert"/></svg></span>Alerta Campus</div>
-      <span id="st"><svg class="i"><use href="#ic-wifi"/></svg><span id="stt">En línea</span></span>
+      <span id="st" aria-live="polite"><svg class="i"><use href="#ic-wifi"/></svg><span id="stt">En línea</span></span>
     </div>
     <h2 id="ttl">Resumen</h2>
     <p id="sub">Así van las incidencias de hoy.</p>
@@ -187,7 +72,7 @@ nav .dot{position:absolute;top:5px;right:calc(50% - 24px);min-width:18px;height:
   </div>
 
   <section class="view on pull" id="v-home">
-    <div class="card">
+    <div class="card" id="card-sync">
       <p class="cr"><img src="imag1.png" alt="" onerror="this.style.display='none'">Jesús González Gómez</p>
       <h3><svg class="i"><use href="#ic-pulse"/></svg>Estado de sincronización</h3>
       <div class="sum">
@@ -206,10 +91,30 @@ nav .dot{position:absolute;top:5px;right:calc(50% - 24px);min-width:18px;height:
       <div style="height:18px"></div>
       <button class="btn" id="sync" type="button"><svg class="i"><use href="#ic-sync"/></svg><span id="synct">Sincronizar</span></button>
     </div>
-    <div class="card">
+
+    <div class="card" id="card-priority">
       <p class="cr"><img src="image2.png" alt="" onerror="this.style.display='none'">Brisset Ariatna Hernández Cadena</p>
       <h3><svg class="i"><use href="#ic-alert"/></svg>Por prioridad</h3>
       <div id="bars"></div>
+    </div>
+
+    <div class="card" id="card-pwa">
+      <h3><svg class="i"><use href="#ic-shield"/></svg>Estado de la PWA</h3>
+      <ul class="diag">
+        <li><span>Service Worker</span><b id="diag-sw">Comprobando…</b></li>
+        <li><span>Caché offline</span><b id="diag-cache">—</b></li>
+        <li><span>Almacenamiento</span><b id="diag-store">—</b></li>
+        <li><span>Notificaciones</span><b id="diag-notif">—</b></li>
+        <li><span>Última notificación</span><b id="diag-last">—</b></li>
+        <li><span>Ubicación</span><b id="diag-geo">—</b></li>
+      </ul>
+      <div class="diag-actions">
+        <button class="mini" id="notif-ask" type="button"><svg class="i"><use href="#ic-bell"/></svg>Activar notificaciones</button>
+        <button class="mini" id="notif-test" type="button"><svg class="i"><use href="#ic-bell"/></svg>Probar notificación</button>
+        <button class="mini" id="geo-test" type="button"><svg class="i"><use href="#ic-pin"/></svg>Probar ubicación</button>
+        <button class="mini solid" id="install" type="button" hidden><svg class="i"><use href="#ic-install"/></svg>Instalar app</button>
+      </div>
+      <p class="hint">El diagnóstico se actualiza al abrir la app y después de cada sincronización. En iPhone, instala desde Compartir → “Añadir a pantalla de inicio”.</p>
     </div>
   </section>
 
@@ -218,17 +123,32 @@ nav .dot{position:absolute;top:5px;right:calc(50% - 24px);min-width:18px;height:
       <h3><svg class="i"><use href="#ic-plus"/></svg><span id="ftitle">Nueva incidencia</span></h3>
       <div class="editing" id="edbar"><svg class="i"><use href="#ic-edit"/></svg>Estás editando un registro existente</div>
       <p class="cr"><img src="image3.png" alt="" onerror="this.style.display='none'">Abigail Cortés de Jesús</p>
-            <form id="f">
+      <form id="f">
         <label class="l" for="t">¿Qué ocurrió?</label>
         <input class="in" id="t" required maxlength="80" placeholder="Ej. Fuga de agua en el pasillo B" autocomplete="off">
         <label class="l">Prioridad</label>
-        <div class="seg" role="radiogroup">
+        <div class="seg" role="radiogroup" aria-label="Prioridad de la incidencia">
           <input type="radio" name="p" id="p1" value="Baja" checked><label for="p1"><svg class="i"><use href="#ic-down"/></svg>Baja</label>
           <input type="radio" name="p" id="p2" value="Media"><label for="p2"><svg class="i"><use href="#ic-flat"/></svg>Media</label>
           <input type="radio" name="p" id="p3" value="Alta"><label for="p3"><svg class="i"><use href="#ic-dbl"/></svg>Alta</label>
         </div>
         <label class="l" for="d">Detalles</label>
         <textarea class="in" id="d" rows="3" placeholder="Lugar, hora y qué se observó"></textarea>
+
+        <label class="l" id="geo-label">Ubicación del incidente (opcional)</label>
+        <div class="geo-box" id="geobox" aria-labelledby="geo-label">
+          <div class="geo-head">
+            <p class="geo-status" id="geo-status" aria-live="polite">Sin ubicación adjunta. Puedes guardar la incidencia sin GPS.</p>
+            <button class="mini" id="geo-get" type="button"><svg class="i"><use href="#ic-pin"/></svg>Obtener ubicación</button>
+          </div>
+          <div class="geo-result" id="geo-result" hidden>
+            <code class="geo-coords" id="geo-coords"></code>
+            <a class="geo-map" id="geo-map" href="#" target="_blank" rel="noopener">Abrir en OpenStreetMap ↗</a>
+            <button class="mini del" id="geo-clear" type="button"><svg class="i"><use href="#ic-x"/></svg>Quitar ubicación</button>
+          </div>
+        </div>
+        <p class="hint">Se solicita permiso al pulsar “Obtener ubicación”. Si lo rechazas o el GPS falla, la incidencia se guarda igual. El enlace al mapa requiere conexión; las coordenadas quedan disponibles sin internet.</p>
+
         <div style="height:20px"></div>
         <div class="row2" id="frow"><button class="btn ghost" id="cancel" type="button" style="display:none"><svg class="i"><use href="#ic-x"/></svg>Cancelar</button>
         <button class="btn" id="save" type="submit"><svg class="i"><use href="#ic-check"/></svg><span id="savet">Guardar incidencia</span></button></div>
@@ -244,354 +164,22 @@ nav .dot{position:absolute;top:5px;right:calc(50% - 24px);min-width:18px;height:
   </section>
 </div>
 
-<nav><div class="in2">
+<nav aria-label="Navegación principal"><div class="in2">
   <p class="cr"><img src="image4.png" alt="" onerror="this.style.display='none'">Johanan Baruc Pineda Mejía</p>
   <button data-v="home" class="on" type="button"><svg class="i"><use href="#ic-home"/></svg>Inicio</button>
   <button data-v="new" type="button"><svg class="i"><use href="#ic-plus"/></svg>Nueva</button>
   <button data-v="list" type="button"><svg class="i"><use href="#ic-list"/></svg>Historial<span class="dot" id="dot">0</span></button>
 </div></nav>
 
-<div class="ov" id="dlg" role="dialog" aria-modal="true"><div class="box">
-  <h3>¿Eliminar incidencia?</h3><p id="dlgt"></p>
+<div class="ov" id="dlg" role="dialog" aria-modal="true" aria-labelledby="dlgh"><div class="box">
+  <h3 id="dlgh">¿Eliminar incidencia?</h3><p id="dlgt"></p>
   <div class="row2"><button class="btn ghost" id="no" type="button">Cancelar</button><button class="btn dng" id="yes" type="button"><svg class="i"><use href="#ic-trash"/></svg>Eliminar</button></div>
 </div></div>
 
-<div id="toast" role="status"><svg class="i"><use href="#ic-check"/></svg><span id="tmsg"></span></div>
+<div id="toast" role="status" aria-live="polite"><svg class="i"><use href="#ic-check"/></svg><span id="tmsg"></span></div>
 
-<script>
-// ============================================================
-// Almacenamiento local: IndexedDB, con respaldo en localStorage
-// ============================================================
-let _db = null, useLS = false;
-const LS_KEY = 'incidencias_respaldo';
+<noscript><div class="card" style="margin:20px">Esta aplicación necesita JavaScript para guardar incidencias y funcionar sin conexión.</div></noscript>
 
-function openDB(){
-  if (_db) return Promise.resolve(_db);
-  return new Promise((ok, ko) => {
-    let req;
-    try { req = indexedDB.open('incidenciasDB', 1); }
-    catch (e) { return ko(e); }
-    req.onupgradeneeded = () => {
-      if (!req.result.objectStoreNames.contains('items'))
-        req.result.createObjectStore('items', { keyPath: 'id' });
-    };
-    req.onsuccess = () => {
-      _db = req.result;
-      _db.onversionchange = () => { _db.close(); _db = null; };
-      ok(_db);
-    };
-    req.onerror = () => ko(req.error || new Error('Error abriendo IndexedDB'));
-    req.onblocked = () => ko(new Error('IndexedDB bloqueada'));
-  });
-}
-
-function tx(mode, fn){
-  return openDB().then(db => new Promise((ok, ko) => {
-    const t = db.transaction('items', mode);
-    const req = fn(t.objectStore('items'));
-    t.oncomplete = () => ok(req ? req.result : undefined);
-    t.onerror = () => ko(t.error);
-    t.onabort = () => ko(t.error || new Error('Transacción abortada'));
-  }));
-}
-
-const del = async id => {
-  if (!useLS) {
-    try { await tx('readwrite', s => s.delete(id)); return; }
-    catch (e) { console.warn('IndexedDB falló, se usa localStorage:', e); useLS = true; }
-  }
-  lsWrite(lsRead().filter(x => x.id !== id));
-};
-const lsRead  = () => { try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]'); } catch (_) { return []; } };
-const lsWrite = a  => localStorage.setItem(LS_KEY, JSON.stringify(a));
-
-async function all(){
-  if (!useLS) {
-    try { return (await tx('readonly', s => s.getAll())) || []; }
-    catch (e) { console.warn('IndexedDB falló, se usa localStorage:', e); useLS = true; }
-  }
-  return lsRead();
-}
-async function put(o){
-  if (!useLS) {
-    try { await tx('readwrite', s => s.put(o)); return; }
-    catch (e) { console.warn('IndexedDB falló, se usa localStorage:', e); useLS = true; }
-  }
-  const a = lsRead(), k = a.findIndex(x => x.id === o.id);
-  if (k >= 0) a[k] = o; else a.push(o);
-  lsWrite(a);
-}
-
-// ============================================================
-// Utilidades
-// ============================================================
-const $   = id => document.getElementById(id);
-const esc = s  => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const ic  = n  => `<svg class="i"><use href="#ic-${n}"/></svg>`;
-
-function uid(){
-  try { if (crypto.randomUUID) return crypto.randomUUID(); } catch (_) {}
-  try {
-    const b = crypto.getRandomValues(new Uint8Array(16));
-    b[6] = (b[6] & 15) | 64; b[8] = (b[8] & 63) | 128;
-    const h = [...b].map(x => x.toString(16).padStart(2, '0')).join('');
-    return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20)}`;
-  } catch (_) {}
-  return 'id-' + Date.now() + '-' + Math.random().toString(16).slice(2);
-}
-
-const COL = { Baja:'var(--mint)', Media:'var(--sun)', Alta:'var(--rose)' };
-const ICO = { Baja:'down', Media:'flat', Alta:'dbl' };
-let filter = 'all';
-
-const TT = {
-  home: ['Resumen', 'Así van las incidencias de hoy.'],
-  new:  ['Nueva incidencia', 'Funciona aunque no haya internet.'],
-  list: ['Historial', 'Todo lo que has registrado.']
-};
-function show(v){
-  document.querySelectorAll('.view').forEach(x => x.classList.toggle('on', x.id === 'v-' + v));
-  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
-  $('ttl').textContent = TT[v][0];
-  $('sub').textContent = TT[v][1];
-  scrollTo(0, 0);
-}
-document.querySelectorAll('nav button').forEach(b => b.onclick = () => show(b.dataset.v));
-
-let toastT;
-function toast(m){
-  $('tmsg').textContent = m;
-  $('toast').classList.add('on');
-  clearTimeout(toastT);
-  toastT = setTimeout(() => $('toast').classList.remove('on'), 2600);
-}
-
-// ============================================================
-// Render (READ)
-// ============================================================
-let q = '';
-async function render(){
-  try {
-    const rows  = (await all());
-    const items = rows.filter(i => !i.deleted).sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)));
-    const n = items.length, ok = items.filter(i => i.synced).length;
-    const pend = rows.filter(i => !i.synced).length;          // incluye cambios y eliminaciones por enviar
-
-    $('tot').textContent = n; $('okn').textContent = ok; $('pen').textContent = pend;
-    $('ring').setAttribute('stroke-dasharray', `${n ? 251.3 * ok / n : 0} 251.3`);
-    $('synct').textContent = pend ? `Sincronizar (${pend})` : 'Todo al día';
-    $('sync').disabled = !pend;
-    $('dot').style.display = pend ? 'grid' : 'none';
-    $('dot').textContent = pend;
-
-    $('bars').innerHTML = ['Alta','Media','Baja'].map(p => {
-      const c = items.filter(i => i.prioridad === p).length;
-      return `<div class="pr"><span>${p}</span><div class="track"><i style="background:${COL[p]};width:${n ? c / n * 100 : 0}%"></i></div><b>${c}</b></div>`;
-    }).join('');
-
-    const F = [['all','Todas','list'], ['pend','Pendientes','clock'], ['Alta','Alta','dbl']];
-    $('chips').innerHTML = F.map(f =>
-      `<button type="button" class="chip ${filter === f[0] ? 'on' : ''}" data-f="${f[0]}">${ic(f[2])}${f[1]}</button>`).join('');
-    $('chips').querySelectorAll('.chip').forEach(b => b.onclick = () => { filter = b.dataset.f; render(); });
-
-    const term = q.trim().toLowerCase();
-    const vis = items.filter(i =>
-      (filter === 'all' || (filter === 'pend' ? !i.synced : i.prioridad === filter)) &&
-      (!term || (i.titulo + ' ' + (i.descripcion || '')).toLowerCase().includes(term)));
-
-    $('list').innerHTML = vis.map(i => `
-      <article class="tk" style="--c:${COL[i.prioridad] || COL.Baja}">
-        <div class="h"><b>${esc(i.titulo)}</b>
-          <span class="badge ${i.synced ? 'ok' : 'wait'}">${ic(i.synced ? 'cloud' : 'clock')}${i.synced ? 'Enviada' : 'Pendiente'}</span></div>
-        ${i.descripcion ? `<p>${esc(i.descripcion)}</p>` : ''}
-        <div class="meta"><span>${ic(ICO[i.prioridad] || 'flat')}${esc(i.prioridad || '')}</span>
-          <span>${ic('clock')}${i.fecha ? new Date(i.fecha).toLocaleString() : ''}</span></div>
-        <div class="acts">
-          <button type="button" class="mini" data-a="edit" data-id="${esc(i.id)}">${ic('edit')}Editar</button>
-          <button type="button" class="mini del" data-a="del" data-id="${esc(i.id)}">${ic('trash')}Eliminar</button>
-        </div>
-      </article>`).join('')
-      || `<div class="empty">${ic('inbox')}${term ? 'Sin resultados para tu búsqueda.' : 'No hay incidencias en esta vista.'}</div>`;
-  } catch (err) {
-    console.error('[render]', err);
-    $('list').innerHTML = `<div class="empty">Error leyendo datos: ${esc(err.message || err)}</div>`;
-  }
-}
-$('q').addEventListener('input', e => { q = e.target.value; render(); });
-
-// ============================================================
-// Crear (CREATE) y Editar (UPDATE)
-// ============================================================
-let editId = null;
-function formMode(editing){
-  $('ftitle').textContent = editing ? 'Editar incidencia' : 'Nueva incidencia';
-  $('savet').textContent  = editing ? 'Guardar cambios' : 'Guardar incidencia';
-  $('edbar').classList.toggle('on', editing);
-  $('cancel').style.display = editing ? 'flex' : 'none';
-  $('frow').style.gridTemplateColumns = editing ? '1fr 1fr' : '1fr';
-}
-function resetForm(){ editId = null; $('f').reset(); formMode(false); }
-
-async function startEdit(id){
-  const it = (await all()).find(x => x.id === id);
-  if (!it) return;
-  editId = id;
-  $('t').value = it.titulo;
-  $('d').value = it.descripcion || '';
-  const r = document.querySelector(`input[name=p][value="${it.prioridad}"]`); if (r) r.checked = true;
-  formMode(true);
-  show('new');
-  $('ttl').textContent = 'Editar incidencia';
-  $('sub').textContent = 'Modifica los datos y guarda los cambios.';
-}
-$('cancel').onclick = () => { resetForm(); show('list'); };
-
-// Al entrar a "Nueva" desde el menú se sale del modo edición
-document.querySelectorAll('nav button').forEach(b => b.addEventListener('click', () => {
-  if (b.dataset.v === 'new' && editId) resetForm();
-}));
-
-$('f').addEventListener('submit', async e => {
-  e.preventDefault();
-  const titulo = $('t').value.trim();
-  if (!titulo) { toast('Escribe qué ocurrió'); return; }
-  const btn = $('save'); btn.disabled = true;
-  const ahora = new Date().toISOString();
-  const campos = {
-    titulo,
-    prioridad: document.querySelector('input[name=p]:checked').value,
-    descripcion: $('d').value.trim()
-  };
-  try {
-    let item, msg;
-    if (editId) {
-      const prev = (await all()).find(x => x.id === editId);
-      if (!prev) throw new Error('El registro ya no existe');
-      item = { ...prev, ...campos, updated: ahora, synced: false };
-      msg = 'Cambios guardados';
-    } else {
-      item = { id: uid(), ...campos, fecha: ahora, updated: ahora, synced: false, onServer: false };
-      msg = navigator.onLine ? 'Incidencia guardada' : 'Guardada sin conexión';
-    }
-    await put(item);
-    if (!(await all()).some(x => x.id === item.id)) throw new Error('No se pudo confirmar el guardado');
-    resetForm();
-    filter = 'all'; q = ''; $('q').value = '';
-    await render();
-    toast(msg);
-    show('list');
-    sync();
-  } catch (err) {
-    console.error('[guardar]', err);
-    toast('Error al guardar: ' + (err.message || err));
-  } finally {
-    btn.disabled = false;
-  }
-});
-
-// ============================================================
-// Eliminar (DELETE): se marca como borrado y se envía al servidor al sincronizar
-// ============================================================
-let delId = null;
-function closeDlg(){ $('dlg').classList.remove('on'); delId = null; }
-$('no').onclick = closeDlg;
-$('dlg').addEventListener('click', e => { if (e.target === $('dlg')) closeDlg(); });
-addEventListener('keydown', e => { if (e.key === 'Escape') closeDlg(); });
-
-$('yes').onclick = async () => {
-  const id = delId; closeDlg();
-  try {
-    const it = (await all()).find(x => x.id === id);
-    if (!it) return;
-    await put({ ...it, deleted: true, synced: false, updated: new Date().toISOString() });
-    if (editId === id) resetForm();
-    await render();
-    toast('Incidencia eliminada');
-    sync();
-  } catch (err) { console.error('[eliminar]', err); toast('Error al eliminar'); }
-};
-
-// Botones de cada tarjeta (delegación de eventos)
-$('list').addEventListener('click', async e => {
-  const b = e.target.closest('button[data-a]'); if (!b) return;
-  const id = b.dataset.id;
-  if (b.dataset.a === 'edit') return startEdit(id);
-  const it = (await all()).find(x => x.id === id); if (!it) return;
-  delId = id;
-  $('dlgt').textContent = '«' + it.titulo + '» se eliminará de este dispositivo y del servidor.';
-  $('dlg').classList.add('on');
-});
-
-// ============================================================
-// Sincronización con el servidor (fetch)
-// ============================================================
-const API = '/api/incidencias', HDR = { 'Content-Type': 'application/json' };
-const payload = i => ({ id: i.id, titulo: i.titulo, prioridad: i.prioridad, descripcion: i.descripcion, fecha: i.fecha, updated: i.updated || i.fecha });
-let syncing = false;
-async function sync(){
-  if (syncing || !navigator.onLine) return;
-  syncing = true; $('sync').classList.add('spin');
-  let sent = 0;
-  try {
-    for (const it of (await all()).filter(i => !i.synced)) {
-      try {
-        const id = encodeURIComponent(it.id);
-        let r;
-        if (it.deleted)        r = await fetch(`${API}/${id}`, { method: 'DELETE' });
-        else if (it.onServer)  r = await fetch(`${API}/${id}`, { method: 'PUT',  headers: HDR, body: JSON.stringify(payload(it)) });
-        else                   r = await fetch(API,            { method: 'POST', headers: HDR, body: JSON.stringify(payload(it)) });
-        if (!r.ok) continue;
-        // Si el usuario cambió el registro mientras se enviaba, se deja pendiente
-        const cur = (await all()).find(x => x.id === it.id);
-        if (!cur || cur.updated !== it.updated) continue;
-        if (it.deleted) await del(it.id);
-        else await put({ ...cur, synced: true, onServer: true });
-        sent++;
-      } catch (_) { break; }        // sin red o sin servidor: se reintenta luego
-    }
-    try {
-      const r = await fetch(API);
-      if (r.ok) {
-        const srv = await r.json();
-        if (Array.isArray(srv)) {
-          const local = new Map((await all()).map(i => [i.id, i]));
-          for (const s of srv) {
-            if (!s || !s.id) continue;
-            const l = local.get(s.id);
-            if (!l) await put({ ...s, synced: true, onServer: true });
-            else if (l.synced && !l.deleted && (s.updated || '') > (l.updated || ''))
-              await put({ ...s, synced: true, onServer: true });
-          }
-        }
-      }
-    } catch (_) {}
-  } finally {
-    syncing = false; $('sync').classList.remove('spin');
-    await render();
-    if (sent) toast(sent + ' cambio(s) sincronizado(s)');
-  }
-}
-$('sync').onclick = sync;
-
-function net(){
-  const o = navigator.onLine;
-  $('stt').textContent = o ? 'En línea' : 'Sin conexión';
-  $('st').className = o ? '' : 'off';
-  $('st').firstElementChild.firstElementChild.setAttribute('href', o ? '#ic-wifi' : '#ic-wifioff');
-}
-addEventListener('online',  () => { net(); sync(); });
-addEventListener('offline', net);
-
-// ============================================================
-// Inicio
-// ============================================================
-net();
-render().then(sync);
-setTimeout(() => $('splash').classList.add('hide'), 1900);
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(console.error);
-}
-</script>
+<script type="module" src="js/app.js"></script>
 </body>
 </html>

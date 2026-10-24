@@ -1,0 +1,24 @@
+{
+  "name": "alerta-campus-pwa",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PWA offline-first para reportar incidencias del campus con notificaciones locales y geolocalización.",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test:e2e": "node tests/e2e.mjs",
+    "icons": "python tools/generate-icons.py"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "pwa",
+    "service-worker",
+    "offline-first",
+    "geolocation",
+    "notifications"
+  ],
+  "license": "MIT"
+}

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#2A1F6B">
+<title>Sin conexión · Alerta Campus</title>
+<style>
+  :root{--ink:#1B1740;--ind:#2A1F6B;--vio:#6C4DFF;--sun:#FFC53D;--paper:#F4F2FB;--mute:#6F6A92}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:var(--paper);color:var(--ink);font-family:"Segoe UI",system-ui,sans-serif}
+  .box{max-width:430px;width:100%;background:#fff;border:2px solid var(--ink);border-radius:24px;padding:30px 24px;box-shadow:8px 8px 0 var(--ink);text-align:center}
+  .mark{width:84px;height:84px;margin:0 auto 18px;border-radius:22px;background:linear-gradient(160deg,var(--vio),var(--ind));display:grid;place-items:center;color:var(--sun)}
+  .mark svg{width:48px;height:48px;fill:none;stroke:currentColor;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+  h1{font-family:"Arial Black",sans-serif;font-size:26px;margin:0 0 10px;letter-spacing:-.02em}
+  p{margin:0 0 22px;color:#4B4672;font-size:14px;line-height:1.55}
+  .btn{display:inline-flex;align-items:center;justify-content:center;width:100%;padding:15px;border:2px solid var(--ink);border-radius:14px;background:var(--vio);color:#fff;font-weight:800;font-size:14px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;text-decoration:none;box-shadow:4px 4px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:none}
+  .link{display:block;margin-top:14px;color:var(--mute);font-size:12px;font-weight:700}
+  .link a{color:var(--vio)}
+</style>
+</head>
+<body>
+  <main class="box">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M12 3.5 21.5 20h-19z"/><path d="M12 10v4.5"/><path d="M12 17.3h.01"/></svg>
+    </div>
+    <h1>Sin conexión</h1>
+    <p>No pudimos cargar esta pantalla porque aún no está guardada en tu dispositivo. Vuelve a intentarlo cuando recuperes internet; tus incidencias locales siguen a salvo.</p>
+    <a class="btn" href="./index.html">Reintentar</a>
+    <span class="link">Alerta Campus · <a href="./index.html">Ir al inicio</a></span>
+  </main>
+</body>
+</html>
